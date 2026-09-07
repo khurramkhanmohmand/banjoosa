@@ -1,0 +1,26 @@
+{
+  "name": "banjoosa",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Banjoosa fast food ordering platform — Phase 1 monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @banjoosa/api",
+    "dev:web": "npm run dev -w @banjoosa/web",
+    "dev:admin": "npm run dev -w @banjoosa/admin",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:migrate": "npm run db:migrate -w @banjoosa/api",
+    "db:seed": "npm run db:seed -w @banjoosa/api"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

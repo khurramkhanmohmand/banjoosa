@@ -1,0 +1,194 @@
+// Banjoosa Phase 1 schema.
+// Branch is modeled as a first-class entity/relation from day one (see
+// apps/api/ARCHITECTURE.md) even though only one row exists today, so
+// Phase 2 multi-branch support is additive rather than a rewrite.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PLACED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  COMPLETED
+  CANCELLED
+}
+
+enum DeliveryMode {
+  DELIVERY
+  PICKUP
+}
+
+enum PaymentMethod {
+  CARD
+  CASH_ON_DELIVERY
+  WALLET
+}
+
+enum CartItemType {
+  MENU_ITEM
+  DEAL
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+}
+
+model Branch {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  phone     String
+  hours     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  menuItems MenuItem[]
+  deals     Deal[]
+  orders    Order[]
+}
+
+model MenuSection {
+  id        String @id @default(cuid())
+  name      String @unique
+  note      String
+  sortOrder Int
+
+  items MenuItem[]
+}
+
+model MenuItem {
+  id              String   @id @default(cuid())
+  branchId        String
+  branch          Branch      @relation(fields: [branchId], references: [id])
+  sectionId       String
+  section         MenuSection @relation(fields: [sectionId], references: [id])
+  name            String
+  slug            String   @unique
+  tag             String?
+  description     String
+  longDescription String
+  imageUrl        String?
+  /// True when the item is priced via variants (size/bread) instead of a flat basePrice.
+  hasVariants     Boolean  @default(false)
+  variantLabel    String?
+  basePrice       Int?
+  isAvailable     Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  variants MenuItemVariant[]
+  addOns   MenuItemAddOn[]
+
+  @@index([branchId])
+  @@index([sectionId])
+}
+
+model MenuItemVariant {
+  id         String   @id @default(cuid())
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  label      String
+  price      Int
+  sortOrder  Int      @default(0)
+
+  @@index([menuItemId])
+}
+
+/// Reusable add-on catalog (Cheese, Jalapeno, ...) shared across many menu items via the join table below.
+model AddOn {
+  id    String @id @default(cuid())
+  name  String @unique
+  price Int
+
+  menuItems MenuItemAddOn[]
+}
+
+model MenuItemAddOn {
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  addOnId    String
+  addOn      AddOn    @relation(fields: [addOnId], references: [id], onDelete: Cascade)
+
+  @@id([menuItemId, addOnId])
+}
+
+model Deal {
+  id              String  @id @default(cuid())
+  branchId        String
+  branch          Branch  @relation(fields: [branchId], references: [id])
+  name            String
+  description     String
+  longDescription String
+  price           Int
+  wasPrice        Int
+  imageUrl        String?
+  isActive        Boolean @default(true)
+  sortOrder       Int     @default(0)
+
+  @@index([branchId])
+}
+
+model Order {
+  id            String       @id @default(cuid())
+  /// Backs the human-friendly BJ-#### order number; never exposed directly.
+  sequence      Int          @default(autoincrement()) @unique
+  orderNumber   String       @unique
+  branchId      String
+  branch        Branch       @relation(fields: [branchId], references: [id])
+  customerName  String
+  customerPhone String
+  deliveryMode  DeliveryMode
+  address       String?
+  deliveryNote  String?
+  pickupTime    String?
+  paymentMethod PaymentMethod
+  status        OrderStatus  @default(PLACED)
+  subtotal      Int
+  deliveryFee   Int
+  tax           Int
+  total         Int
+  etaMinutes    Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  items OrderLineItem[]
+
+  @@index([branchId])
+  @@index([status])
+}
+
+/// Snapshot of a cart line at order time (name/price/labels), so later menu edits never change historical orders.
+model OrderLineItem {
+  id           String       @id @default(cuid())
+  orderId      String
+  order        Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  itemType     CartItemType
+  refId        String
+  name         String
+  variantLabel String?
+  addOnLabels  String[]
+  unitPrice    Int
+  qty          Int
+  lineTotal    Int
+
+  @@index([orderId])
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         AdminRole @default(SUPER_ADMIN)
+  createdAt    DateTime  @default(now())
+}
