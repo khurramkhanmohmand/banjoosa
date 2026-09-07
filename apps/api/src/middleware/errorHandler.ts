@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import type { ApiErrorResponse } from "@banjoosa/types";
 import { AppError } from "../lib/errors";
 import { ZodError } from "zod";
+import { MulterError } from "multer";
 
 /**
  * Single consistent error-response shape for the whole API: every failure
@@ -19,6 +20,12 @@ export function errorHandler(err: unknown, req: Request, res: Response<ApiErrorR
     res.status(400).json({
       error: { message: "Invalid request body", code: "VALIDATION_ERROR", details: err.flatten() },
     });
+    return;
+  }
+
+  if (err instanceof MulterError) {
+    const message = err.code === "LIMIT_FILE_SIZE" ? "Image must be 5MB or smaller" : err.message;
+    res.status(400).json({ error: { message, code: `UPLOAD_${err.code}` } });
     return;
   }
 

@@ -42,7 +42,7 @@ export function MenuItemCard({
   size = "grid",
 }: MenuItemCardProps) {
   return (
-    <Card className="flex flex-col h-full">
+    <Card interactive className="flex flex-col h-full">
       <motion.div
         onClick={onOpen}
         whileHover={{ filter: "brightness(1.03)" }}

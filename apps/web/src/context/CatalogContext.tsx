@@ -1,16 +1,18 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import type { Branch, Deal, MenuItem, MenuSection } from "@banjoosa/types";
+import type { Branch, Deal, MenuItem, MenuSection, SiteSettings } from "@banjoosa/types";
 import { useMenu } from "@/hooks/useMenu";
 import { useDeals } from "@/hooks/useDeals";
 import { useBranch } from "@/hooks/useBranch";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 interface CatalogContextValue {
   sections: MenuSection[];
   items: MenuItem[];
   deals: Deal[];
   branch: Branch | null;
+  settings: SiteSettings | null;
   loading: boolean;
   error: string | null;
 }
@@ -27,14 +29,16 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
   const menu = useMenu();
   const { deals, loading: dealsLoading, error: dealsError } = useDeals();
   const { branch, loading: branchLoading, error: branchError } = useBranch();
+  const { settings, loading: settingsLoading, error: settingsError } = useSiteSettings();
 
   const value: CatalogContextValue = {
     sections: menu.sections,
     items: menu.items,
     deals,
     branch,
-    loading: menu.loading || dealsLoading || branchLoading,
-    error: menu.error ?? dealsError ?? branchError,
+    settings,
+    loading: menu.loading || dealsLoading || branchLoading || settingsLoading,
+    error: menu.error ?? dealsError ?? branchError ?? settingsError,
   };
 
   return <CatalogContext.Provider value={value}>{children}</CatalogContext.Provider>;

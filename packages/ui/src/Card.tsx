@@ -1,7 +1,14 @@
-import type { HTMLAttributes, ReactNode } from "react";
+"use client";
 
-export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+import type { HTMLAttributes, ReactNode } from "react";
+import { motion } from "motion/react";
+
+type ConflictingHandlers = "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart" | "onAnimationEnd";
+
+export interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, ConflictingHandlers> {
   shadow?: "sticker" | "sticker-lg" | "sticker-soft" | "sticker-soft-lg" | "none";
+  /** Adds a hover lift (translate + deeper shadow) — set on cards that are themselves clickable, e.g. section/menu cards. */
+  interactive?: boolean;
   children: ReactNode;
 }
 
@@ -14,13 +21,25 @@ const SHADOW_CLASSES: Record<NonNullable<CardProps["shadow"]>, string> = {
 };
 
 /** The flat bordered "sticker card" container reused across menu, deal, review and stat cards. */
-export function Card({ shadow = "sticker", className = "", children, ...rest }: CardProps) {
+export function Card({ shadow = "sticker", interactive = false, className = "", children, ...rest }: CardProps) {
+  const classes = ["border-4 border-ink rounded-card bg-white overflow-hidden", SHADOW_CLASSES[shadow], className].join(" ");
+
+  if (!interactive) {
+    return (
+      <div className={classes} {...rest}>
+        {children}
+      </div>
+    );
+  }
+
   return (
-    <div
-      className={["border-4 border-ink rounded-card bg-white overflow-hidden", SHADOW_CLASSES[shadow], className].join(" ")}
+    <motion.div
+      whileHover={{ y: -5, boxShadow: "10px 10px 0 #1a1512" }}
+      transition={{ type: "spring", stiffness: 380, damping: 24 }}
+      className={classes}
       {...rest}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

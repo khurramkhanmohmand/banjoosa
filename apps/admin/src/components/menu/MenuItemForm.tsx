@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, Input, Pill, Select, Textarea } from "@banjoosa/ui";
+import { Button, Card, ImageUploadField, Input, Pill, Select, Textarea } from "@banjoosa/ui";
 import { useSections } from "@/hooks/useSections";
 import { useAddOns } from "@/hooks/useAddOns";
 import type { MenuItemFormInput, MenuItemVariantInput } from "@/hooks/useAdminMenuItems";
+import { uploadImage } from "@/lib/uploadImage";
 
 interface MenuItemFormProps {
   initial: MenuItemFormInput;
@@ -88,11 +89,11 @@ export function MenuItemForm({ initial, submitLabel, onSubmit }: MenuItemFormPro
         value={form.longDescription}
         onChange={(e) => set("longDescription", e.target.value)}
       />
-      <Input
-        label="Image path (optional)"
-        placeholder="/menu/pizza.png"
-        value={form.imageUrl ?? ""}
-        onChange={(e) => set("imageUrl", e.target.value || null)}
+      <ImageUploadField
+        label="Photo"
+        value={form.imageUrl}
+        onChange={(url) => set("imageUrl", url)}
+        onUploadFile={uploadImage}
       />
 
       <div>

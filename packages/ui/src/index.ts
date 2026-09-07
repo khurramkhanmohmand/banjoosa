@@ -18,3 +18,6 @@ export * from "./Select";
 export * from "./Textarea";
 export * from "./Marquee";
 export * from "./RevealOnScroll";
+export * from "./Carousel";
+export * from "./ReviewCard";
+export * from "./ImageUploadField";

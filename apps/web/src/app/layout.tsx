@@ -8,6 +8,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ItemDetailModal } from "@/components/ItemDetailModal";
+import { PageTransition } from "@/components/PageTransition";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -26,13 +27,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body className="font-body text-ink bg-cream min-h-screen">
+      <body className="font-body text-ink bg-cream min-h-screen flex flex-col">
         <ToastProvider>
           <CatalogProvider>
             <CartProvider>
               <ItemModalProvider>
                 <Header />
-                {children}
+                {/* flex-1 pins the footer to the bottom of the viewport instead of it floating up under short pages */}
+                <main className="flex-1 flex flex-col">
+                  <PageTransition>{children}</PageTransition>
+                </main>
                 <Footer />
                 <CartDrawer />
                 <ItemDetailModal />

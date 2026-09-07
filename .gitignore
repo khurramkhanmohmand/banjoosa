@@ -10,4 +10,5 @@ build/
 npm-debug.log*
 /apps/api/generated/
 /apps/api/prisma/generated/
+/apps/api/public/uploads/
 coverage/

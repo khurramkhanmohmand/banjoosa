@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "banjoosa-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "-w", "@banjoosa/api"],
+      "port": 4000
+    },
+    {
+      "name": "banjoosa-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "-w", "@banjoosa/web"],
+      "port": 3000
+    },
+    {
+      "name": "banjoosa-admin",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "-w", "@banjoosa/admin"],
+      "port": 3001
+    }
+  ]
+}

@@ -121,15 +121,25 @@ const SEC_NOTE: Record<string, string> = {
 };
 
 async function main() {
+  const BRANCH_NAME = "DHA Phase 1";
+  const BRANCH_ADDRESS = "H, Building 97-H, Phase 1 Commercial, Sector H, DHA";
+  const BRANCH_PHONE = "042-34551755";
+  const BRANCH_HOURS = "4:00 pm – 4:00 am";
+
   const branch = await prisma.branch.upsert({
     where: { id: "banjoosa-gulberg-3" },
-    update: {},
+    update: {
+      name: BRANCH_NAME,
+      address: BRANCH_ADDRESS,
+      phone: BRANCH_PHONE,
+      hours: BRANCH_HOURS,
+    },
     create: {
       id: "banjoosa-gulberg-3",
-      name: "Gulberg III",
-      address: "12-C Main Boulevard, near Liberty roundabout, Lahore",
-      phone: "042-34551755",
-      hours: "11:00 am – 2:00 am",
+      name: BRANCH_NAME,
+      address: BRANCH_ADDRESS,
+      phone: BRANCH_PHONE,
+      hours: BRANCH_HOURS,
       isActive: true,
     },
   });
@@ -238,6 +248,17 @@ async function main() {
       },
     });
   }
+
+  await prisma.siteSettings.upsert({
+    where: { id: "singleton" },
+    update: {},
+    create: {
+      id: "singleton",
+      heroImageUrl: "/menu/pulled-burger.png",
+      tickerText:
+        "MAKE ANY BURGER A MEAL +RS 260 ★ FREE DELIVERY OVER RS 2000 ★ ANDA SHAMI RS 250 ★ CROWN CRUST IS BACK ★ ",
+    },
+  });
 
   const adminEmail = process.env.ADMIN_SEED_EMAIL ?? "admin@banjoosa.test";
   const adminPassword = process.env.ADMIN_SEED_PASSWORD ?? "changeme123";

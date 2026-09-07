@@ -192,3 +192,13 @@ model AdminUser {
   role         AdminRole @default(SUPER_ADMIN)
   createdAt    DateTime  @default(now())
 }
+
+/// Single-row settings table (id is always "singleton") for site-wide
+/// content the Super Admin can edit without a deploy — the Home hero photo
+/// and the promo ticker text today, more fields as Phase 1 grows.
+model SiteSettings {
+  id           String   @id @default("singleton")
+  heroImageUrl String?
+  tickerText   String
+  updatedAt    DateTime @updatedAt
+}

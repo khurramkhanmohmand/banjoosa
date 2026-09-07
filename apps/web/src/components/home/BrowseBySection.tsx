@@ -24,7 +24,7 @@ export function BrowseBySection({ items }: { items: MenuItem[] }) {
           const cover = SECTION_COVER[section];
           return (
             <Link key={section} href={`/menu?category=${encodeURIComponent(section)}`}>
-              <Card shadow="sticker-soft" className="cursor-pointer h-full">
+              <Card shadow="sticker-soft" interactive className="cursor-pointer h-full">
                 <div className="h-[110px] border-b-4 border-ink bg-card relative">
                   {cover ? (
                     // eslint-disable-next-line @next/next/no-img-element

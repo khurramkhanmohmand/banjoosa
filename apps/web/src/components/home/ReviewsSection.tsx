@@ -1,20 +1,26 @@
-import { Card } from "@banjoosa/ui";
+import { Carousel, ReviewCard } from "@banjoosa/ui";
 
+/** Real 5-star Google reviews for the DHA branch, provided by the client — the 1-star review from that listing was intentionally excluded. */
 const REVIEWS = [
   {
-    name: "Leslie Alexander",
-    meta: "Gulberg III",
-    text: "Platter shawarma with paratha is the best value on this street. Fries actually hand-cut.",
+    name: "Muhammad Aman Khan",
+    meta: "Google review",
+    text: "This place is absolutely amazing! Their shawarma is incredibly juicy and flavorful, the spices are perfectly balanced making every bite a delight. And the pizza? Simply topnotch! With a crispy crust, fresh cheese, and quality toppings, it tastes just as good as it looks. If you're ever in DHA especially around H Block, make sure to give this spot a try — you won't be disappointed!",
   },
   {
-    name: "Esther Howard",
-    meta: "DHA Phase 5",
-    text: "Delivery came in 22 minutes and the crown crust was still hot. Zinger is consistent every time.",
+    name: "Muhammad Ali",
+    meta: "Google review",
+    text: "Best wrap and shawarma in town. Always hot and fresh. Wings are superb.",
   },
   {
-    name: "Darlene Robertson",
-    meta: "Johar Town",
-    text: "Ordered the family pizza deal for six people and it worked out cheaper than anywhere nearby.",
+    name: "Ambreen Akram",
+    meta: "Google review",
+    text: "Great experience.. very good taste. Food is really worth it.",
+  },
+  {
+    name: "Saood Ahmed Jatoi",
+    meta: "Google review",
+    text: "Great taste and services. Really good option in this area.",
   },
 ];
 
@@ -25,16 +31,11 @@ export function ReviewsSection() {
         <h2 className="font-display text-4xl text-brand-yellow mb-6" style={{ textShadow: "4px 4px 0 #1a1512" }}>
           WHAT PEOPLE SAY
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Carousel>
           {REVIEWS.map((r) => (
-            <Card key={r.name} shadow="none" className="p-6">
-              <div className="font-display text-xl text-brand-red">★★★★★</div>
-              <p className="text-base leading-relaxed my-2.5">{r.text}</p>
-              <div className="font-ui font-bold uppercase tracking-wide text-lg">{r.name}</div>
-              <div className="text-sm text-meta">{r.meta}</div>
-            </Card>
+            <ReviewCard key={r.name} name={r.name} meta={r.meta} text={r.text} />
           ))}
-        </div>
+        </Carousel>
       </div>
     </div>
   );

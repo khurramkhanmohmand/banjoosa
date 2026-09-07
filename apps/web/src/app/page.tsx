@@ -11,12 +11,12 @@ import { HowItWorks } from "@/components/home/HowItWorks";
 import { ReviewsSection } from "@/components/home/ReviewsSection";
 
 export default function HomePage() {
-  const { items, loading, error } = useCatalog();
+  const { items, settings, loading, error } = useCatalog();
 
   return (
     <div>
-      <HeroSection />
-      <PromoTicker />
+      <HeroSection heroImageUrl={settings?.heroImageUrl ?? null} />
+      <PromoTicker text={settings?.tickerText} />
 
       {loading && (
         <div className="flex justify-center py-16">

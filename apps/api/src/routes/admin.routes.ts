@@ -13,6 +13,9 @@ import {
 } from "../controllers/admin/menuItem.controller";
 import { getDealAdmin, listDealsAdmin, postDeal, putDeal, removeDeal } from "../controllers/admin/deal.controller";
 import { getReports } from "../controllers/admin/report.controller";
+import { putSiteSettings } from "../controllers/admin/settings.controller";
+import { postUpload } from "../controllers/admin/upload.controller";
+import { upload } from "../lib/uploads";
 
 export const adminRouter = Router();
 adminRouter.use(requireAdmin);
@@ -37,3 +40,6 @@ adminRouter.put("/deals/:id", putDeal);
 adminRouter.delete("/deals/:id", removeDeal);
 
 adminRouter.get("/reports", getReports);
+
+adminRouter.put("/settings", putSiteSettings);
+adminRouter.post("/uploads", upload.single("file"), postUpload);

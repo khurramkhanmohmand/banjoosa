@@ -5,3 +5,4 @@ export * from "./socket";
 export * from "./auth";
 export * from "./api";
 export * from "./pricing";
+export * from "./settings";
