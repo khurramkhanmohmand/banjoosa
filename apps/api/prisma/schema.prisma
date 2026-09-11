@@ -4,7 +4,8 @@
 // Phase 2 multi-branch support is additive rather than a rewrite.
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
