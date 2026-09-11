@@ -29,7 +29,19 @@ if (!process.env.PRISMA_QUERY_ENGINE_LIBRARY) {
   }
 }
 
-const pool = new Pool({ connectionString: env.databaseUrl });
+/**
+ * Supabase's Postgres requires SSL. `pg` doesn't reliably enable it from a
+ * `?sslmode=require` query param alone, so set it explicitly (Supabase's own
+ * connection certs aren't in Node's default CA bundle, hence
+ * rejectUnauthorized: false — this is Supabase's documented setup for `pg`).
+ * connectionTimeoutMillis keeps a bad connection failing fast instead of
+ * hanging until the host's gateway kills the request.
+ */
+const pool = new Pool({
+  connectionString: env.databaseUrl,
+  ssl: { rejectUnauthorized: false },
+  connectionTimeoutMillis: 10_000,
+});
 const adapter = new PrismaPg(pool);
 
 /**
