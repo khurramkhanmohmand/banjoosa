@@ -6,7 +6,7 @@
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
     "start:dist": "node dist/server.js",
-    "build": "prisma generate && esbuild src/server.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/server.js --packages=external",
+    "build": "prisma generate && esbuild src/server.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/server.js && node scripts/copy-prisma-engine.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
