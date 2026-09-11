@@ -8,8 +8,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // DATABASE_URL: pooled connection (e.g. Supabase's PgBouncer transaction
+  // pooler) for the running app. DIRECT_URL: direct connection, used only
+  // by `prisma migrate`/`db push` since pooled connections don't support
+  // the prepared statements migrations need.
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum OrderStatus {
